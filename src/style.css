@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+body {
+  @apply bg-gray-100 flex justify-center items-center min-h-screen;
+}
+
+#app {
+  @apply bg-white shadow-md overflow-hidden w-screen h-screen;
+}
+
+#appContent {
+  @apply flex flex-row h-full;
+}
+
+aside {
+  @apply w-1/6 text-white flex flex-col p-4 space-y-4;
+  background-color: #171717;
+}
+
+.bot-list-item {
+  @apply cursor-pointer p-2 rounded flex flex-row items-center;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: #2f2f2f;
+  }
+}
+
+.bot-list-item img {
+  @apply w-10 h-10 rounded-full mr-4;
+}
+
+.chat-container {
+  @apply flex-1 flex flex-col;
+}
+
+#message-container {
+  @apply flex-1 p-4 overflow-y-auto;
+  background-color: #212121;
+  overflow-x: hidden;
+
+}
+
+.message {
+  @apply flex items-start mb-4 text-white;
+  line-height: 1.2;
+}
+
+.user-message {
+  @apply justify-end ;
+  
+}
+
+.bot-message {
+  @apply justify-start;
+}
+
+.message img {
+  @apply w-10 h-10 rounded-full mr-4;
+}
+
+.message div {
+  @apply rounded-lg p-2;
+  background-color: #2f2f2f;
+}
+
+.input-container {
+  @apply px-40 py-2 flex items-center border-spacing-0;
+  background-color: #212121;
+}
+
+#message-input {
+  @apply flex-1 py-2 px-5 rounded-3xl mr-2 text-white outline-none;
+  background-color: #2f2f2f;
+}
+
+#send-button {
+  @apply p-2 bg-white text-black rounded-3xl;
+}

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="./src/style.css" type="text/css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatBot App</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="appContent" class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside>
+          <h2 class="text-lg font-semibold">Bots</h2>
+          <ul id="bot-list">
+            <!-- Bot list will be populated by the script -->
+          </ul>
+        </aside>
+  
+        <!-- Chat Container -->
+        <div class="chat-container">
+          <!-- Messages -->
+          <div id="message-container">
+            <!-- Messages will be rendered here -->
+          </div>
+  
+          <!-- Input -->
+          <div class="input-container">
+            <input id="message-input" type="text" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
