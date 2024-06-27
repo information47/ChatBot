@@ -3,7 +3,7 @@ export interface Message {
     botName: string;
     avatar: string;
     content: string;
-    timestamp: Date;
+    date: string;
     sender: 'user' | 'bot';
   }
   
@@ -11,7 +11,6 @@ export interface Message {
     name: string;
     avatar: string;
     actions: Record<string, (message: string) => Promise<string>>;
-    help: String;
   }
   
   export interface ChatState {

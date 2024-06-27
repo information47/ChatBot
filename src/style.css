@@ -49,6 +49,10 @@ aside {
   line-height: 1.2;
 }
 
+.message-timestamp {
+  @apply text-xs text-gray-400;
+}
+
 .user-message {
   @apply justify-end ;
   

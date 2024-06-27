@@ -1,4 +1,4 @@
-export const buildJokeUrl1 = (category: string, blacklist: string, searchWord: string) => {
+export const buildJokeUrl1 = (category: string, blacklist: string) => {
     return `https://v2.jokeapi.dev/joke/${category}${blacklist}`;
 };
 
@@ -65,15 +65,13 @@ export const buildJokeUrl = (args: string): string => {
     }
     let categories = getCategories(args.split(' '));
     let blacklist = getBlacklist(args.split(' '));
-    console.log("blacklist " + blacklist);
     let searchWord = getSearchWord(args);
-    console.log("searchWord " + searchWord);
+    
     let url = `https://v2.jokeapi.dev/joke/${categories}`;
     if (blacklist != "" || searchWord != "") {url += "?";}
     if (blacklist != "") {url += "blacklistFlags=" + blacklist;}
     if (blacklist != "" && searchWord != "") {url += "&";}
     if (searchWord != "") {url += `contains=${searchWord}`;}
-    console.log("url " + url);
     return url;
 
 }

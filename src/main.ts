@@ -1,31 +1,7 @@
-// import './style.css'
-// import typescriptLogo from './typescript.svg'
-// import viteLogo from '/vite.svg'
-// import { setupCounter } from './counter.ts'
-
-// document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-//   <div>
-//     <a href="https://vitejs.dev" target="_blank">
-//       <img src="${viteLogo}" class="logo" alt="Vite logo" />
-//     </a>
-//     <a href="https://www.typescriptlang.org/" target="_blank">
-//       <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-//     </a>
-//     <h1>Vite + TypeScript</h1>
-//     <div class="card">
-//       <button id="counter" type="button"></button>
-//     </div>
-//     <p class="read-the-docs">
-//       Click on the Vite and TypeScript logos to learn more
-//     </p>
-//   </div>
-// `
-
-// setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
-
 import './style.css';
 import { bots } from './bots';
 import { Message, ChatState } from './types';
+import { getFormattedDate } from './utils/dateUtils';
 
 const state: ChatState = {
   messages: JSON.parse(localStorage.getItem('messages') || '[]'),
@@ -64,6 +40,7 @@ const renderMessages = () => {
     ${message.sender !== 'user' ? `<img src="${message.avatar}" alt="${message.botName}" />` : ''}
     <div>
       <div>${message.content}</div>
+      ${message.sender !== 'user' ? `<div class="message-timestamp">${message.date}</div>` : ''}
     </div>
   `;
     messageContainer.appendChild(messageElement);
@@ -78,7 +55,7 @@ const sendMessage = async (content: string) => {
     botName: 'User',
     avatar: 'user.png',
     content,
-    timestamp: new Date(),
+    date: getFormattedDate(),
     sender: 'user',
   };
   state.messages.push(userMessage);
@@ -86,26 +63,28 @@ const sendMessage = async (content: string) => {
   localStorage.setItem('messages', JSON.stringify(state.messages));
 
   // split the content into command and arguments
-  const [command, ...args] = content.split(' ');
+  const [command, ...args] = content.toLowerCase().split(' ');
 
-  // find the bot that can handle the command
-  const bot = bots.find(b => Object.keys(b.actions).includes(command));
-  
-  if (bot) {
-    // call the function associated with the command and pass the arguments
-    const responseContent = await bot.actions[command](args.join(' '));
-    
-    const botMessage: Message = {
-      id: Math.random().toString(36).substr(2, 9),
-      botName: bot.name,
-      avatar: bot.avatar,
-      content: responseContent,
-      timestamp: new Date(),
-      sender: 'bot',
-    };
-    state.messages.push(botMessage);
+  // find the bots that can handle the command
+  const botsWithCommand = bots.filter(b => Object.keys(b.actions).includes(command));
+
+  if (botsWithCommand.length > 0) {
+    for (const bot of botsWithCommand) {
+      
+      const responseContent = await bot.actions[command](args.join(' '));
+      
+      const botMessage: Message = {
+        id: Math.random().toString(36).substr(2, 9),
+        botName: bot.name,
+        avatar: bot.avatar,
+        content: responseContent,
+        date: getFormattedDate(),
+        sender: 'bot',
+      };
+      state.messages.push(botMessage);
+      localStorage.setItem('messages', JSON.stringify(state.messages));
+    }
     renderMessages();
-    localStorage.setItem('messages', JSON.stringify(state.messages));
   }
 };
 
