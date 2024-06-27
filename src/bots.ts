@@ -1,4 +1,6 @@
 import { Bot } from './types';
+import { buildWeatherUrl, processWeatherResponse, buildMoonPhaseUrl } from './utils/weatherUtils';
+import{ buildJokeUrl } from './utils/jokeUtils';
 
 const helpCommand = async (): Promise<string> => {
     // return the help message for all the bots
@@ -6,18 +8,9 @@ const helpCommand = async (): Promise<string> => {
 };
 
 function filterLinksFromResponse(response: string): string {
-    // remove <a> tags and their content from the response
+    // remove <a> tags and their content from a string
     return response.replace(/<a[^>]*>([^<]+)<\/a>/gi, '');
 }
-
-const buildWeatherUrl = (location: string, days: string = '0'): string => `https://wttr.in/${location}?nq${days}&lang=en`;
-
-const buildMoonPhaseUrl = (): string => 'https://wttr.in/?format=%m';
-
-const processWeatherResponse = async (url: string): Promise<string> => {
-    const response = await fetch(url);
-    return response.text();
-};
 
 const createBot = (
     name: string, 
@@ -33,8 +26,8 @@ const createBot = (
 }
 
 const MeteoBot = createBot(
-    'MeteoMan',
-    'meteo.png',
+    'WeatherMan',
+    'weather.png',
     {
         weather: async (args: string): Promise<string> => {
             if (!args) {
@@ -58,23 +51,41 @@ const MeteoBot = createBot(
     &nbsp Get the weather for the given city for the next (1-3) days<br><br>
     - <u>moon</u><br>
     &nbsp Get the moon phase<br><br>
+    examples:<br>
+    &nbsp weather Paris<br>
+    &nbsp weather Paris 2<br>
+    &nbsp moon<br>
     `
 );
 
 const JokerBot = createBot(
-    'Joker',
+    'JokeMan',
     'clown.png',
     {
-        joke: async (): Promise<string> => {
-            const response = await fetch('https://api.chucknorris.io/jokes/random');
+        joke: async (args: string): Promise<string> => {
+            const response = await fetch(buildJokeUrl(args));
             const data = await response.json();
-            return data.value;
+            if (data.error) {
+                return 'I have no jokes for you with these parameters...';
+            }
+            return data.type == "single" ? data.joke : data.setup + '\n' + data.delivery;
         },
         help: helpCommand,
     },
     `
     - <u>joke</u><br>
-    &nbsp Get a random joke<br><br>
+    &nbsp Get a random joke<br>
+    &nbsp Options:<br>
+    &nbsp &nbsp [ "WordToInclude" ]<br>
+    &nbsp &nbsp (1max)<br><br>
+    &nbsp &nbsp [ -FlagToBlacklist ]<br>
+    &nbsp &nbsp &nbsp (racist, sexist, explicit, political, religious, nsfw)<br><br>
+    &nbsp &nbsp [ Category1 Category2 ... ]<br>
+    &nbsp &nbsp (Any, Misc, Programming, Dark, Pun, Spooky, Christmas)<br><br>
+    examples:<br>
+    &nbsp joke "chicken" -racist -sexist Any<br>
+    &nbsp joke<br>
+    &nbsp joke programming<br>
     `
 );  
 
